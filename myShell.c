@@ -57,6 +57,7 @@ int takeInp(char *inp) {
     char *temp;  // buraya kopyalama yapacağımız gecisi degisken tanımlıyoruz
     
     temp = readline("\nmyshell>> ");  // myshell okuyoruz kullanıcadan input alınr
+    gets(temp)
     if (strlen(temp) != 0){ 
         strcpy(inp, temp); // inputu tempe kopyalar
         return 0; 
