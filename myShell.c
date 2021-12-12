@@ -2,8 +2,7 @@
 #include<string.h> 
 #include<stdlib.h> 
 #include<unistd.h> 
-#include<sys/types.h> 
-#include<sys/wait.h> 
+
 
 
 
@@ -12,20 +11,34 @@ int main(){
 	char input[100];  // input dizisi
 	char *str[100];   //inputtaki string ifadelerin tutulduğu dizi  kelimler
 	char *islem[100]; //inputtaki istenen islemşn tutulduğu dizi     komutlar
-	int exit = 0;     
+
+	int e;   
 
 	while(1){
-        int i;
-        takeInp(input); // input almayı fonksiyon ile yaptım
-        divideSep(input, islem); // alınan input or ile bolme islemi olur
-        for(i = 0; i< length(islem); i++){ 
+	printf("myshell>>");
+      
+        fgets(input,100,stdin);	
+    	char *temp;  
+        divideSep(input, islem); 
+        for(int i = 0; i< length(islem); i++){ 
             divideSpace(islem[i], str); // girileen komut bosluklara bolunur
             if(strcmp(str[0],"exit") == 0){ // eger input exit ise cikis
-                exit = 1; 
-                break;
+
+                exit(0);
+            }else if(strcmp(str[0],"tekrar")==0){
+              
+		    pid_t f = fork(); //Fork yapıyoruz.
+		    if(f == 0){ 
+		        e = execv("tekrar",str);
+			}
+		    
+		    else{
+		        wait(&e); 
+		    }
+        
             }else if(strcmp(str[0],"ls")==0){
     		        system("/bin/ls");
-   	        }else if(strcmp(str[0],"clear") == 0){ // eger input clear ise
+   	    }else if(strcmp(str[0],"clear") == 0){ // eger input clear ise
                     system("clear");
             }else if(strcmp(str[0],"cat") == 0){ // input cat ise
             	char *catt[3]; 
@@ -53,19 +66,7 @@ int main(){
 	return 0;
 }
 
-int takeInp(char *inp) { 
-    char *temp;  // buraya kopyalama yapacağımız gecisi degisken tanımlıyoruz
-    
-    temp = readline("\nmyshell>> ");  // myshell okuyoruz kullanıcadan input alınr
-    gets(temp)
-    if (strlen(temp) != 0){ 
-        strcpy(inp, temp); // inputu tempe kopyalar
-        return 0; 
-    } 
-    else{ 
-        return 1; 
-    } 
-} 
+
 
 int length(char *input[]){  // alınan input uzunluğu buna göre for döngusu yazılacaktır
     int length = 0;
